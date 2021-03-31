@@ -80,7 +80,7 @@ module OmniAuth
               log :debug, "Token url: #{@token_url}"
             end
 
-            def callback_phase # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+            def callback_phase
                 error = request.params["error_reason"] || request.params["error"]
                 if error
                   fail!(error, CallbackError.new(request.params["error"], request.params["error_description"] || request.params["error_reason"], request.params["error_uri"]))
@@ -90,7 +90,7 @@ module OmniAuth
                   self.access_token = build_access_token
                   self.access_token = access_token.refresh! if access_token.expired?
                   super
-                  redirect "http://localhost:3333/oauth/recived?token=#{access_token.token}"
+                  redirect "http://localhost:3333/auth/gitlab?token=#{access_token.token}"
                 end
             rescue ::OAuth2::Error, CallbackError => e
                 fail!(:invalid_credentials, e)
