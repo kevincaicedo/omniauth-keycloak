@@ -81,10 +81,17 @@ module OmniAuth
 
             def build_access_token
                 verifier = request.params["code"]
-                client.auth_code.get_token(verifier, 
-                    {:redirect_uri => "http://localhost:3333/oauth/recived"}
+                token = client.auth_code.get_token(verifier, 
+                    {:redirect_uri => callback_url.gsub(/\?.+\Z/, "")}
                     .merge(token_params.to_hash(:symbolize_keys => true)), 
                     deep_symbolize(options.auth_token_params))
+                log :debug, "Test TK: #{token}"
+                return token
+            end
+
+            def other_phase
+                log :debug, "Test TK: #{self.access_token.token}"
+                redirect "http://localhost:3333/oauth/recived?token=#{self.access_token.token}"
             end
 
             uid{ raw_info['sub'] }
