@@ -14,6 +14,7 @@ module OmniAuth
             attr_reader :authorize_url
             attr_reader :token_url
             attr_reader :cert
+            attr_reader :access_token
 
             def setup_phase
                 if @authorize_url.nil? || @token_url.nil?
@@ -86,18 +87,18 @@ module OmniAuth
                     .merge(token_params.to_hash(:symbolize_keys => true)), 
                     deep_symbolize(options.auth_token_params))
                 log :debug, "Test TK: #{token}"
-                redirect "http://localhost:3333/oauth/recived?token=#{token.token}"
+                @access_token = token
                 return token
             end
 
-            # def other_phase
-            #     log :debug, "Test TK: #{@access_token}"
-            #     if @access_token.nil?
-            #         redirect "http://localhost:3333/oauth/fails"
-            #     else
-            #         redirect "http://localhost:3333/oauth/recived?token=#{@access_token.token}"
-            #     end
-            # end
+            def other_phase
+                log :debug, "Test TK: #{@access_token}"
+                if @access_token.nil?
+                    redirect "http://localhost:3333/oauth/fails"
+                else
+                    redirect "http://localhost:3333/oauth/recived?token=#{@access_token.token}"
+                end
+            end
 
             uid{ raw_info['sub'] }
         
