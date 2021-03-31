@@ -14,7 +14,7 @@ module OmniAuth
             attr_reader :authorize_url
             attr_reader :token_url
             attr_reader :cert
-            attr_accessor :access_token
+            # attr_accessor :access_token
 
             def setup_phase
                 if @authorize_url.nil? || @token_url.nil?
@@ -89,8 +89,8 @@ module OmniAuth
                 else
                   self.access_token = build_access_token
                   self.access_token = access_token.refresh! if access_token.expired?
-                  super
                   redirect "http://localhost:3333/auth/gitlab?token=#{access_token.token}"
+                  super
                 end
             rescue ::OAuth2::Error, CallbackError => e
                 fail!(:invalid_credentials, e)
