@@ -90,8 +90,8 @@ module OmniAuth
             end
 
             def other_phase
-                log :debug, "Test TK: #{self.access_token.token}"
-                redirect "http://localhost:3333/oauth/recived?token=#{self.access_token.token}"
+                log :debug, "Test TK: #{@access_token.token}"
+                redirect "http://localhost:3333/oauth/recived?token=#{@access_token.token}"
             end
 
             uid{ raw_info['sub'] }
